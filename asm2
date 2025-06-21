@@ -1,0 +1,116 @@
+-- INSERT DỮ LIỆU
+
+INSERT INTO department (Department_Name)
+VALUES 
+('Marketing'),
+('Sale'),
+('Bảo vệ'),
+('Nhân sự'),
+('Kỹ thuật'),
+('Tài chính'),
+('Phó giám đốc'),
+('Giám đốc'),
+('Thư kí'),
+('Bán hàng');
+
+INSERT INTO position (Position_Name)
+VALUES ('Dev'), ('Test'), ('Scrum Master'), ('PM');
+
+INSERT INTO account (Email, User_name, Full_name, Department_ID, Position_ID, Create_Date)
+VALUES
+('nguyenvan1@vti.com.vn', 'nguyenvan1', 'Nguyễn Văn 1', 1, 1, '2019-11-01'),
+('tranthivan2@vti.com.vn', 'tranthivan2', 'Trần Thị Vân 2', 2, 2, '2019-12-01'),
+('lethikim3@vti.com.vn', 'lethikim3', 'Lê Thị Kim 3', 3, 1, '2020-01-10'),
+('phamvan4@vti.com.vn', 'phamvan4', 'Phạm Văn 4', 4, 3, '2021-03-15'),
+('buitrung5@vti.com.vn', 'buitrung5', 'Bùi Trung 5', 5, 2, '2023-03-20');
+
+INSERT INTO `group` (GroupName, CreatorID, CreateDate)
+VALUES 
+('Nhóm Dev', 1, '2019-12-01'),
+('Nhóm Test', 2, '2020-01-15'),
+('Nhóm Scrum', 3, '2019-11-20'),
+('Nhóm PM', 4, '2021-06-10'),
+('Nhóm BA', 5, '2023-03-22');
+
+INSERT INTO groupaccount (Group_ID, Account_ID, Join_Date)
+VALUES 
+(1, 1, '2019-11-30'),
+(2, 2, '2020-01-20'),
+(3, 3, '2019-12-10'),
+(4, 4, '2021-06-11'),
+(5, 5, '2023-03-25');
+
+INSERT INTO typequestion (Type_Name)
+VALUES ('Essay'), ('Multiple-Choice');
+
+INSERT INTO categoryquestion (Category_Name)
+VALUES ('Java'), ('SQL'), ('Python'), ('DevOps'), ('Testing');
+
+INSERT INTO question (Content, Category_ID, Type_ID, Creator_ID, Create_Date)
+VALUES 
+('Câu hỏi Java cơ bản', 1, 2, 1, '2019-12-01'),
+('Câu hỏi SQL nâng cao', 2, 1, 2, '2020-01-10'),
+('câu hỏi DevOps', 4, 2, 3, '2019-11-05'),
+('câu hỏi Testing', 5, 1, 4, '2021-01-01'),
+('Câu hỏi Python', 3, 1, 5, '2023-02-20');
+
+INSERT INTO answer (Content, Question_ID, is_Correct)
+VALUES 
+('Đáp án 1', 1, TRUE),
+('Đáp án 2', 1, FALSE),
+('Đáp án 3', 1, FALSE),
+('Đáp án 4', 1, FALSE),
+('Đáp án đúng SQL', 2, TRUE);
+INSERT INTO exam (Code, Title, Category_ID, Duration, Creator_ID, Create_Date)
+VALUES
+('EX001', 'Đề thi Java cơ bản', 1, 60, 1, '2019-11-01'),
+('EX002', 'Đề thi SQL nâng cao', 2, 90, 2, '2019-12-01'),
+('EX003', 'Đề thi DevOps', 4, 45, 3, '2020-01-10'),
+('EX004', 'Đề thi Testing', 5, 70, 4, '2021-03-15'),
+('EX005', 'Đề thi Python', 3, 80, 5, '2023-03-20');
+INSERT INTO examquestion (Exam_ID, Question_ID)
+VALUES
+(1, 1),
+(1, 2),
+(2, 3),
+(3, 4),
+(4, 5);
+-- Q2
+SELECT * FROM department;
+
+-- Q3
+SELECT Department_ID FROM department WHERE Department_Name = 'Sale';
+-- Q4
+SELECT * FROM account WHERE CHAR_LENGTH(Full_name) = (SELECT MAX(CHAR_LENGTH(Full_name)) FROM account
+);
+-- Q5
+SELECT * FROM account WHERE Department_ID = 3 AND CHAR_LENGTH(Full_name) = (SELECT MAX(CHAR_LENGTH(Full_name)) FROM account WHERE Department_ID = 3
+);
+
+
+-- Q6
+SELECT GroupName FROM `group` WHERE CreateDate < '2019-12-20';
+
+-- Q7
+SELECT Question_ID FROM answer GROUP BY Question_ID HAVING COUNT(*) >= 4;
+
+-- Q8
+SELECT Code FROM exam WHERE Duration >= 60 AND Create_Date < '2019-12-20';
+
+
+-- Q10
+SELECT COUNT(*) FROM account WHERE Department_ID = 2;
+
+-- Q11
+SELECT * FROM account WHERE Full_name LIKE 'D%o';
+
+-- Q12
+DELETE FROM exam WHERE Create_Date < '2019-12-20';
+
+-- Q13
+DELETE FROM question WHERE Content LIKE 'câu hỏi%';
+
+-- Q14
+UPDATE account SET Full_name = 'Nguyễn Bá Lộc', Email = 'loc.nguyenba@vti.com.vn' WHERE Account_ID = 5;
+
+-- Q15
