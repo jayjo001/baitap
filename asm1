@@ -1,0 +1,89 @@
+CREATE TABLE Department (
+    DepartmentID INT AUTO_INCREMENT PRIMARY KEY,
+    DepartmentName VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Position (
+    PositionID INT AUTO_INCREMENT PRIMARY KEY,
+    PositionName ENUM('Dev', 'Test', 'Scrum Master', 'PM') NOT NULL
+);
+
+CREATE TABLE Account (
+    AccountID INT AUTO_INCREMENT PRIMARY KEY,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    FullName VARCHAR(100) NOT NULL,
+    DepartmentID INT,
+    PositionID INT,
+    CreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID),
+    FOREIGN KEY (PositionID) REFERENCES `Position`(PositionID)
+);
+
+CREATE TABLE `Group` (
+    GroupID INT AUTO_INCREMENT PRIMARY KEY,
+    GroupName VARCHAR(100) NOT NULL,
+    CreatorID INT,
+    CreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CreatorID) REFERENCES Account(AccountID)
+);
+
+-- Tạo bảng GroupAccount
+CREATE TABLE GroupAccount (
+    GroupID INT,
+    AccountID INT,
+    JoinDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (GroupID, AccountID),
+    FOREIGN KEY (GroupID) REFERENCES `Group`(GroupID),
+    FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
+);
+
+CREATE TABLE TypeQuestion (
+    TypeID INT AUTO_INCREMENT PRIMARY KEY,
+    TypeName ENUM('Essay', 'Multiple-Choice') NOT NULL
+);
+
+CREATE TABLE CategoryQuestion (
+    CategoryID INT AUTO_INCREMENT PRIMARY KEY,
+    CategoryName VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Question (
+    QuestionID INT AUTO_INCREMENT PRIMARY KEY,
+    Content TEXT NOT NULL,
+    CategoryID INT,
+    TypeID INT,
+    CreatorID INT,
+    CreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CategoryID) REFERENCES CategoryQuestion(CategoryID),
+    FOREIGN KEY (TypeID) REFERENCES TypeQuestion(TypeID),
+    FOREIGN KEY (CreatorID) REFERENCES Account(AccountID)
+);
+
+CREATE TABLE Answer (
+    AnswerID INT AUTO_INCREMENT PRIMARY KEY,
+    Content TEXT NOT NULL,
+    QuestionID INT,
+    isCorrect BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
+);
+
+CREATE TABLE Exam (
+    ExamID INT AUTO_INCREMENT PRIMARY KEY,
+    Code VARCHAR(20) NOT NULL UNIQUE,
+    Title VARCHAR(100) NOT NULL,
+    CategoryID INT,
+    Duration INT CHECK (Duration > 0),
+    CreatorID INT,
+    CreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CategoryID) REFERENCES CategoryQuestion(CategoryID),
+    FOREIGN KEY (CreatorID) REFERENCES Account(AccountID)
+);
+
+CREATE TABLE ExamQuestion (
+    ExamID INT,
+    QuestionID INT,
+    PRIMARY KEY (ExamID, QuestionID),
+    FOREIGN KEY (ExamID) REFERENCES Exam(ExamID),
+    FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
+);
